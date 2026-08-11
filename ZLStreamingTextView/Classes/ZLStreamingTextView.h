@@ -50,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// beyond it). `0` means unlimited. Default `0`.
 @property (nonatomic, assign) CGFloat maxTextHeight;
 
+/// Whether the underlying text view can scroll while (and after) printing. Default `YES`.
+@property (nonatomic, assign, getter=isScrollEnabled) BOOL scrollEnabled;
+
 /// YES while text is actively being revealed.
 @property (nonatomic, assign, readonly) BOOL isStreaming;
 

@@ -81,6 +81,14 @@
     [self notifyContentSizeChangeIfNeeded];
 }
 
+- (void)setScrollEnabled:(BOOL)scrollEnabled {
+    self.textView.scrollEnabled = scrollEnabled;
+}
+
+- (BOOL)isScrollEnabled {
+    return self.textView.scrollEnabled;
+}
+
 #pragma mark - Plain text
 
 - (void)startStreamingText:(NSString *)text {
