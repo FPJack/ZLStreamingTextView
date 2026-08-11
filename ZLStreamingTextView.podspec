@@ -31,7 +31,7 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '10.0'
 
   s.source_files = 'ZLStreamingTextView/Classes/**/*'
-  
+
   # s.resource_bundles = {
   #   'ZLStreamingTextView' => ['ZLStreamingTextView/Assets/*.png']
   # }

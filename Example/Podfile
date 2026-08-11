@@ -4,10 +4,28 @@ platform :ios, '10.0'
 
 target 'ZLStreamingTextView_Example' do
   pod 'ZLStreamingTextView', :path => '../'
-
+  pod 'Down'
   target 'ZLStreamingTextView_Tests' do
     inherit! :search_paths
 
     pod 'FBSnapshotTestCase'
+  end
+end
+
+# Down vendors `cmark` whose `cmark.h` uses angle-bracket includes for its sibling
+# headers. Xcode's "explicitly built modules" scanner rejects those, so rewrite them
+# to quoted includes. This runs on every `pod install`.
+post_install do |installer|
+  cmark_header = File.join(installer.sandbox.root, 'Down/Sources/cmark/cmark.h')
+  if File.exist?(cmark_header)
+    contents = File.read(cmark_header)
+    patched = contents
+                .gsub('#include <cmark_export.h>', '#include "cmark_export.h"')
+                .gsub('#include <cmark_version.h>', '#include "cmark_version.h"')
+    if patched != contents
+      File.chmod(0644, cmark_header) rescue nil
+      File.write(cmark_header, patched)
+      puts '[post_install] Patched Down cmark.h angle-bracket includes.'
+    end
   end
 end
