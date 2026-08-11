@@ -105,6 +105,27 @@
     [self startDisplayLinkIfNeeded];
 }
 
+#pragma mark - Start from an offset
+
+- (void)startStreamingText:(NSString *)text
+                fromLength:(NSUInteger)startLength {
+    NSAttributedString *attributed = [[NSAttributedString alloc] initWithString:(text ?: @"")
+                                                                     attributes:self.defaultTextAttributes];
+    [self startStreamingAttributedText:attributed fromLength:startLength];
+}
+
+- (void)startStreamingAttributedText:(NSAttributedString *)attributedText
+                          fromLength:(NSUInteger)startLength {
+    [self resetBuffer];
+    if (attributedText.length > 0) {
+        [self.bufferedText appendAttributedString:attributedText];
+    }
+    // Immediately reveal the prefix, then stream the remainder from there.
+    self.visibleLength = MIN(startLength, self.bufferedText.length);
+    [self applyVisibleText];
+    [self startDisplayLinkIfNeeded];
+}
+
 #pragma mark - Incremental append
 
 - (void)appendText:(NSString *)text {

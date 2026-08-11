@@ -85,6 +85,18 @@ NS_ASSUME_NONNULL_BEGIN
 /// Reset the buffer and start streaming the given attributed (rich) text.
 - (void)startStreamingAttributedText:(NSAttributedString *)attributedText;
 
+#pragma mark - Start from an offset
+
+/// Reset the buffer to the given plain text, immediately show the first `startLength` characters,
+/// then stream-reveal the remainder from there.
+- (void)startStreamingText:(NSString *)text
+               fromLength:(NSUInteger)startLength;
+
+/// Reset the buffer to the given attributed text, immediately show the first `startLength`
+/// characters, then stream-reveal the remainder from there.
+- (void)startStreamingAttributedText:(NSAttributedString *)attributedText
+                          fromLength:(NSUInteger)startLength;
+
 #pragma mark - Incremental append (e.g. network stream chunks)
 
 /// Append plain text to the buffer; streaming continues/starts automatically.

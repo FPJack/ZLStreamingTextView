@@ -97,6 +97,7 @@
     UIButton *resetButton = [self buttonWithTitle:@"Reset" action:@selector(onReset)];
     UIButton *chatButton  = [self buttonWithTitle:@"AI Chat (Down Markdown)" action:@selector(onOpenChat)];
     UIButton *sizeButton  = [self buttonWithTitle:@"Pre-calc Size" action:@selector(onOpenSizeCalc)];
+    UIButton *offsetButton= [self buttonWithTitle:@"Start From Offset" action:@selector(onStartFromOffset)];
 
     UIStackView *row1 = [[UIStackView alloc] initWithArrangedSubviews:@[plainButton, richButton, streamButton]];
     row1.axis = UILayoutConstraintAxisHorizontal;
@@ -108,7 +109,7 @@
     row2.distribution = UIStackViewDistributionFillEqually;
     row2.spacing = 12;
 
-    UIStackView *stack = [[UIStackView alloc] initWithArrangedSubviews:@[row1, row2, chatButton, sizeButton]];
+    UIStackView *stack = [[UIStackView alloc] initWithArrangedSubviews:@[row1, row2, chatButton, sizeButton, offsetButton]];
     stack.axis = UILayoutConstraintAxisVertical;
     stack.spacing = 12;
     stack.translatesAutoresizingMaskIntoConstraints = NO;
@@ -216,6 +217,19 @@
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)onStartFromOffset {
+    // The prefix (before the marker) is shown instantly; streaming begins from `startLength`.
+    NSString *prefix = @"【已加载】前面这段文字直接展示，";
+    NSString *rest   = @"从这里开始逐帧打字机式地流式输出剩余内容～ ✨\n"
+                       @"适合断点续传 / 恢复上次进度的场景。";
+    NSString *text = [prefix stringByAppendingString:rest];
+
+    self.statusLabel.text = [NSString stringWithFormat:@"从第 %lu 个字符开始流式", (unsigned long)prefix.length];
+    self.streamingView.charactersPerFrame = 1;
+    self.streamingView.frameInterval = 2;
+    [self.streamingView startStreamingText:text fromLength:prefix.length];
 }
 
 #pragma mark - ZLStreamingTextViewDelegate
