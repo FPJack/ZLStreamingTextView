@@ -27,7 +27,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self commonInit];
+        [self commonInitWithTextView:nil];
     }
     return self;
 }
@@ -35,12 +35,25 @@
 - (instancetype)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
     if (self) {
-        [self commonInit];
+        [self commonInitWithTextView:nil];
     }
     return self;
 }
 
-- (void)commonInit {
+- (instancetype)initWithTextView:(UITextView *)textView {
+    return [self initWithFrame:CGRectZero textView:textView];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+                     textView:(UITextView *)textView {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self commonInitWithTextView:textView];
+    }
+    return self;
+}
+
+- (void)commonInitWithTextView:(nullable UITextView *)textView {
     _charactersPerFrame = 1;
     _frameInterval = 1;
     _visibleLength = 0;
@@ -52,12 +65,19 @@
         NSForegroundColorAttributeName: [UIColor blackColor]
     };
 
-    _textView = [[UITextView alloc] initWithFrame:self.bounds];
+    if (textView) {
+        // 采用外部传入的自定义文本视图，尽量保留其原有配置。
+        _textView = textView;
+        _textView.frame = self.bounds;
+        _textView.editable = NO; // 流式展示视图不可编辑
+    } else {
+        _textView = [[UITextView alloc] initWithFrame:self.bounds];
+        _textView.editable = NO;
+        _textView.scrollEnabled = YES;
+        _textView.backgroundColor = [UIColor clearColor];
+        _textView.textContainerInset = UIEdgeInsetsMake(8, 8, 8, 8);
+    }
     _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _textView.editable = NO;
-    _textView.scrollEnabled = YES;
-    _textView.backgroundColor = [UIColor clearColor];
-    _textView.textContainerInset = UIEdgeInsetsMake(8, 8, 8, 8);
     [self addSubview:_textView];
 }
 

@@ -27,6 +27,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ZLStreamingTextView : UIView
 
+/// 使用外部传入的自定义 UITextView 进行初始化（便于复用已配置好字体 / 颜色 / 内边距等的实例）。
+/// 传入的 textView 会被强制设为不可编辑（`editable = NO`），其余配置保持不变。
+- (instancetype)initWithTextView:(UITextView *)textView;
+
+/// 使用指定 frame 与外部传入的自定义 UITextView 进行初始化。
+- (instancetype)initWithFrame:(CGRect)frame
+                     textView:(UITextView *)textView NS_DESIGNATED_INITIALIZER;
+
+- (instancetype)initWithFrame:(CGRect)frame NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
+
 /// 底层的文本视图。你可以直接配置它（字体、颜色、内边距……）。
 @property (nonatomic, strong, readonly) UITextView *textView;
 
