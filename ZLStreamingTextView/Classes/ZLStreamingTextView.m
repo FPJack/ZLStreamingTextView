@@ -9,20 +9,20 @@
 @property (nonatomic, strong) UITextView *textView;
 @property (nonatomic, assign) BOOL isStreaming;
 
-/// Full buffered content (everything we eventually want to show).
+/// 完整的缓冲内容（最终要显示的全部文字）。
 @property (nonatomic, strong) NSMutableAttributedString *bufferedText;
-/// How many characters of `bufferedText` are currently displayed.
+/// `bufferedText` 中当前已显示的字符数。
 @property (nonatomic, assign) NSUInteger visibleLength;
 
 @property (nonatomic, strong, nullable) CADisplayLink *displayLink;
 @property (nonatomic, assign) NSUInteger frameCounter;
-/// Last reported text content size, used to detect width/height changes.
+/// 上一次上报的内容尺寸，用于检测宽 / 高变化。
 @property (nonatomic, assign) CGSize lastContentSize;
 @end
 
 @implementation ZLStreamingTextView
 
-#pragma mark - Init
+#pragma mark - 初始化
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -44,8 +44,10 @@
     _charactersPerFrame = 1;
     _frameInterval = 1;
     _visibleLength = 0;
+    _streamingEnabled = YES;
     _bufferedText = [[NSMutableAttributedString alloc] init];
-    _lastContentSize = CGSizeZero;    _defaultTextAttributes = @{
+    _lastContentSize = CGSizeZero;
+    _defaultTextAttributes = @{
         NSFontAttributeName: [UIFont systemFontOfSize:16.0],
         NSForegroundColorAttributeName: [UIColor blackColor]
     };
@@ -63,7 +65,7 @@
     [self stopDisplayLink];
 }
 
-#pragma mark - Derived state
+#pragma mark - 派生状态
 
 - (NSUInteger)totalLength {
     return self.bufferedText.length;
@@ -101,7 +103,16 @@
     return self.textView.scrollEnabled;
 }
 
-#pragma mark - Plain text
+- (void)setStreamingEnabled:(BOOL)streamingEnabled {
+    if (_streamingEnabled == streamingEnabled) { return; }
+    _streamingEnabled = streamingEnabled;
+    // 若在文字仍未显示完时关闭流式，则立即显示剩余内容。
+    if (!streamingEnabled && self.visibleLength < self.bufferedText.length) {
+        [self finishImmediately];
+    }
+}
+
+#pragma mark - 纯文本
 
 - (void)startStreamingText:(NSString *)text {
     [self startStreamingText:text attributes:self.defaultTextAttributes];
@@ -115,7 +126,7 @@
     [self startStreamingAttributedText:attributed];
 }
 
-#pragma mark - Rich text
+#pragma mark - 富文本
 
 - (void)startStreamingAttributedText:(NSAttributedString *)attributedText {
     [self resetBuffer];
@@ -125,7 +136,7 @@
     [self startDisplayLinkIfNeeded];
 }
 
-#pragma mark - Start from an offset
+#pragma mark - 从指定偏移开始
 
 - (void)startStreamingText:(NSString *)text
                 fromLength:(NSUInteger)startLength {
@@ -140,13 +151,13 @@
     if (attributedText.length > 0) {
         [self.bufferedText appendAttributedString:attributedText];
     }
-    // Immediately reveal the prefix, then stream the remainder from there.
+    // 立即显示前缀，然后从该处开始流式显示剩余内容。
     self.visibleLength = MIN(startLength, self.bufferedText.length);
     [self applyVisibleText];
     [self startDisplayLinkIfNeeded];
 }
 
-#pragma mark - Incremental append
+#pragma mark - 增量追加
 
 - (void)appendText:(NSString *)text {
     if (text.length == 0) { return; }
@@ -161,7 +172,7 @@
     [self startDisplayLinkIfNeeded];
 }
 
-#pragma mark - Control
+#pragma mark - 控制
 
 - (void)pause {
     self.isStreaming = NO;
@@ -195,11 +206,17 @@
     [self notifyContentSizeChangeIfNeeded];
 }
 
-#pragma mark - Display link driving
+#pragma mark - Display Link 驱动
 
 - (void)startDisplayLinkIfNeeded {
-    // Nothing left to reveal.
+    // 没有可显示的剩余内容。
     if (self.visibleLength >= self.bufferedText.length) {
+        return;
+    }
+    // 流式已关闭：一次性显示全部并立即完成。
+    if (!self.streamingEnabled) {
+        self.isStreaming = YES; // 保证完成回调依然会触发
+        [self finishImmediately];
         return;
     }
     self.isStreaming = YES;
@@ -227,7 +244,7 @@
     NSUInteger step = MAX(self.charactersPerFrame, 1);
     NSUInteger newVisible = MIN(self.visibleLength + step, self.bufferedText.length);
     if (newVisible == self.visibleLength) {
-        // Caught up with the buffer. Stop until more text arrives.
+        // 已追平缓冲区。停止，等待更多文字到达。
         [self stopStreaming];
         return;
     }
@@ -261,7 +278,7 @@
     }
 }
 
-#pragma mark - Rendering
+#pragma mark - 渲染
 
 - (void)applyVisibleText {
     NSUInteger length = MIN(self.visibleLength, self.bufferedText.length);
@@ -270,15 +287,15 @@
     [self notifyContentSizeChangeIfNeeded];
 }
 
-#pragma mark - Content size tracking
+#pragma mark - 内容尺寸跟踪
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    // Width may change when the view is resized, which affects wrapped text height.
+    // 视图缩放时宽度可能变化，进而影响换行后的文字高度。
     [self notifyContentSizeChangeIfNeeded];
 }
 
-/// The size the visible text actually occupies (fits the current / max width, clamped to max height).
+/// 已显示文字实际占用的尺寸（适配当前 / 最大宽度，并限制到最大高度）。
 - (CGSize)textContentSize {
     CGFloat width = self.maxTextWidth > 0 ? self.maxTextWidth : CGRectGetWidth(self.textView.bounds);
     if (width <= 0) {
@@ -328,9 +345,9 @@
     return self.lastContentSize;
 }
 
-#pragma mark - Size pre-calculation
+#pragma mark - 尺寸预计算
 
-/// A shared, reused text view for off-screen measurement (must be used on the main thread).
+/// 用于离屏测量的共享、可复用文本视图（必须在主线程使用）。
 + (UITextView *)sharedSizingTextView {
     static UITextView *sizingTextView = nil;
     static dispatch_once_t onceToken;
@@ -379,9 +396,9 @@
             lineFragmentPadding:(CGFloat)lineFragmentPadding {
     if (attributedText.length == 0 || maxWidth <= 0) { return CGSizeZero; }
 
-    // Measure with a shared, reused UITextView so the result matches exactly what will be
-    // rendered (a raw NSLayoutManager / usedRectForTextContainer computes line heights slightly
-    //  differently for mixed fonts, which causes a few points of height drift).
+    // 使用共享、可复用的 UITextView 进行测量，使结果与实际渲染完全一致
+    //（裸用 NSLayoutManager / usedRectForTextContainer 对混排字体的行高计算略有差异，
+    //  会导致几点高度偏差）。
     UITextView *sizingTextView = [self sharedSizingTextView];
     sizingTextView.textContainerInset = textContainerInset;
     sizingTextView.textContainer.lineFragmentPadding = lineFragmentPadding;
@@ -389,7 +406,7 @@
 
     CGSize fitting = [sizingTextView sizeThatFits:CGSizeMake(maxWidth, CGFLOAT_MAX)];
 
-    // Release the reference so the (potentially large) attributed string isn't retained.
+    // 释放引用，避免（可能很大的）富文本被长期持有。
     sizingTextView.attributedText = nil;
     return CGSizeMake(ceil(fitting.width), ceil(fitting.height));
 }

@@ -2,8 +2,8 @@
 //  ZLStreamingTextView.h
 //  ZLStreamingTextView
 //
-//  A UITextView wrapper that prints text frame by frame (typewriter / streaming effect).
-//  Supports both plain text (NSString) and rich text (NSAttributedString).
+//  一个封装了 UITextView 的视图，可逐帧打印文字（打字机 / 流式效果）。
+//  同时支持纯文本（NSString）和富文本（NSAttributedString）。
 //
 
 #import <UIKit/UIKit.h>
@@ -14,141 +14,143 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol ZLStreamingTextViewDelegate <NSObject>
 @optional
-/// Called on every frame the visible length changes.
+/// 每当可见文字长度变化（即每帧）时回调。
 - (void)streamingTextView:(ZLStreamingTextView *)textView
        didUpdateVisibleLength:(NSUInteger)visibleLength
                   totalLength:(NSUInteger)totalLength;
-/// Called once all buffered text has been revealed and streaming stops.
+/// 当所有缓冲文字都显示完毕、流式停止时回调一次。
 - (void)streamingTextViewDidFinish:(ZLStreamingTextView *)textView;
-/// Called whenever the rendered text content size (width and/or height) changes.
+/// 当渲染文字的内容尺寸（宽和/或高）发生变化时回调。
 - (void)streamingTextView:(ZLStreamingTextView *)textView
      didChangeContentSize:(CGSize)contentSize;
 @end
 
 @interface ZLStreamingTextView : UIView
 
-/// The underlying text view. You may configure it directly (font, color, insets ...).
+/// 底层的文本视图。你可以直接配置它（字体、颜色、内边距……）。
 @property (nonatomic, strong, readonly) UITextView *textView;
 
-/// Delegate for progress / completion callbacks.
+/// 进度 / 完成回调的代理。
 @property (nonatomic, weak, nullable) id<ZLStreamingTextViewDelegate> delegate;
 
-/// Number of characters revealed on every display-link frame. Default is 1.
+/// 每一帧（display link）显示的字符数。默认为 1。
 @property (nonatomic, assign) NSUInteger charactersPerFrame;
 
-/// Reveal a frame every N screen frames. 1 = every frame (fastest). Default is 1.
+/// 每隔 N 个屏幕帧显示一帧文字。1 = 每帧都显示（最快）。默认为 1。
 @property (nonatomic, assign) NSUInteger frameInterval;
 
-/// Default text attributes used for plain-text streaming when none are supplied.
+/// 纯文本流式时若未指定属性所使用的默认文字属性。
 @property (nonatomic, copy, nullable) NSDictionary<NSAttributedStringKey, id> *defaultTextAttributes;
 
-/// Maximum width used to lay out / wrap the text. `0` means use the view's current width. Default `0`.
-/// Setting a fixed value gives a stable content-size measurement independent of the view's bounds.
+/// 是否启用逐帧打字机效果。设为 `NO` 时，任何 `start...` / `append...` 调用都会
+/// 立即完整显示其内容（无动画）。默认 `YES`。
+@property (nonatomic, assign, getter=isStreamingEnabled) BOOL streamingEnabled;
+
+/// 排版 / 换行所使用的最大宽度。`0` 表示使用视图当前宽度。默认 `0`。
+/// 设为固定值可以得到与视图 bounds 无关的稳定内容尺寸测量结果。
 @property (nonatomic, assign) CGFloat maxTextWidth;
 
 
-/// Maximum height. The reported content-size height is clamped to this value (the text view scrolls
-/// beyond it). `0` means unlimited. Default `0`.
+/// 最大高度。上报的内容尺寸高度会被限制到此值（超出部分由文本视图滚动显示）。
+/// `0` 表示不限制。默认 `0`。
 @property (nonatomic, assign) CGFloat maxTextHeight;
 
-/// Minimum width. The reported content-size width is never smaller than this value. `0` means no
-/// minimum. Default `0`.
+/// 最小宽度。上报的内容尺寸宽度不会小于此值。`0` 表示不限制。默认 `0`。
 @property (nonatomic, assign) CGFloat minTextWidth;
 
-/// Minimum height. The reported content-size height is never smaller than this value. `0` means no
-/// minimum. Default `0`.
+/// 最小高度。上报的内容尺寸高度不会小于此值。`0` 表示不限制。默认 `0`。
 @property (nonatomic, assign) CGFloat minTextHeight;
 
-/// Whether the underlying text view can scroll while (and after) printing. Default `YES`.
+/// 打印过程中（及之后）底层文本视图是否可以滚动。默认 `YES`。
 @property (nonatomic, assign, getter=isScrollEnabled) BOOL scrollEnabled;
 
-/// YES while text is actively being revealed.
+/// 正在逐帧显示文字时为 YES。
 @property (nonatomic, assign, readonly) BOOL isStreaming;
 
-/// The number of characters currently visible.
+/// 当前已显示的字符数。
 @property (nonatomic, assign, readonly) NSUInteger visibleLength;
 
-/// The total number of characters buffered (visible + pending).
+/// 缓冲区中的总字符数（已显示 + 待显示）。
 @property (nonatomic, assign, readonly) NSUInteger totalLength;
 
-/// The size the currently visible text occupies for the current width.
+/// 当前已显示文字在当前宽度下所占用的尺寸。
 @property (nonatomic, assign, readonly) CGSize textContentSize;
 
-/// Progress callback (alternative to delegate).
+/// 进度回调（代理的替代方案）。
 @property (nonatomic, copy, nullable) void (^onProgress)(NSUInteger visibleLength, NSUInteger totalLength);
 
-/// Completion callback (alternative to delegate).
+/// 完成回调（代理的替代方案）。
 @property (nonatomic, copy, nullable) void (^onComplete)(void);
 
-/// Called whenever the rendered text content size (width / height) changes while streaming.
+/// 流式过程中，当渲染文字的内容尺寸（宽 / 高）变化时回调。
 @property (nonatomic, copy, nullable) void (^onContentSizeChange)(CGSize contentSize);
 
-#pragma mark - Plain text
+#pragma mark - 纯文本
 
-/// Reset the buffer and start streaming the given plain text using `defaultTextAttributes`.
+/// 重置缓冲区，并使用 `defaultTextAttributes` 开始流式显示给定的纯文本。
 - (void)startStreamingText:(NSString *)text;
 
-/// Reset the buffer and start streaming the given plain text with explicit attributes.
+/// 重置缓冲区，并使用指定属性开始流式显示给定的纯文本。
 - (void)startStreamingText:(NSString *)text
                 attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes;
 
-#pragma mark - Rich text
+#pragma mark - 富文本
 
-/// Reset the buffer and start streaming the given attributed (rich) text.
+/// 重置缓冲区，并开始流式显示给定的富文本。
 - (void)startStreamingAttributedText:(NSAttributedString *)attributedText;
 
-#pragma mark - Start from an offset
+#pragma mark - 从指定偏移开始
 
-/// Reset the buffer to the given plain text, immediately show the first `startLength` characters,
-/// then stream-reveal the remainder from there.
+/// 将缓冲区重置为给定纯文本，立即显示前 `startLength` 个字符，
+/// 然后从该处开始流式显示剩余内容。
 - (void)startStreamingText:(NSString *)text
                fromLength:(NSUInteger)startLength;
 
-/// Reset the buffer to the given attributed text, immediately show the first `startLength`
-/// characters, then stream-reveal the remainder from there.
+/// 将缓冲区重置为给定富文本，立即显示前 `startLength` 个字符，
+/// 然后从该处开始流式显示剩余内容。
 - (void)startStreamingAttributedText:(NSAttributedString *)attributedText
                           fromLength:(NSUInteger)startLength;
 
-#pragma mark - Incremental append (e.g. network stream chunks)
+#pragma mark - 增量追加（例如网络流式分块）
 
-/// Append plain text to the buffer; streaming continues/starts automatically.
+/// 向缓冲区追加纯文本；流式会自动继续 / 开始。
 - (void)appendText:(NSString *)text;
 
-/// Append rich text to the buffer; streaming continues/starts automatically.
+/// 向缓冲区追加富文本；流式会自动继续 / 开始。
 - (void)appendAttributedText:(NSAttributedString *)attributedText;
 
-#pragma mark - Control
+#pragma mark - 控制
 
-/// Pause revealing (buffer is kept).
+/// 暂停显示（保留缓冲区）。
 - (void)pause;
 
-/// Resume revealing after a pause.
+/// 暂停后继续显示。
 - (void)resume;
 
-/// Immediately reveal all buffered text and stop.
+/// 立即显示全部缓冲文字并停止。
 - (void)finishImmediately;
 
-/// Clear everything (buffer + visible text) and stop.
+/// 清空所有内容（缓冲区 + 已显示文字）并停止。
 - (void)reset;
 
-#pragma mark - Size pre-calculation
+#pragma mark - 尺寸预计算
 
-/// Pre-calculate the size the given text would occupy in THIS view, honoring the receiver's
-/// `textView` insets / line padding and `maxTextWidth` (falls back to the current bounds width).
+/// 预计算给定文字在【本视图】中所占用的尺寸，会沿用本视图 `textView` 的内边距 /
+/// 行间距以及 `maxTextWidth`（未设置时回退到当前 bounds 宽度）。
 - (CGSize)sizeThatFitsText:(nullable NSString *)text;
 
-/// Pre-calculate the size the given attributed (rich) text would occupy in THIS view.
+/// 预计算给定富文本在【本视图】中所占用的尺寸。
 - (CGSize)sizeThatFitsAttributedText:(nullable NSAttributedString *)attributedText;
 
-/// Pre-calculate the size the given attributed text occupies when laid out within `maxWidth`.
-/// `textContainerInset` / `lineFragmentPadding` should mirror the target UITextView so the
-/// result matches what will be displayed (UITextView defaults: inset {8,8,8,8}, padding 5).
+/// 预计算给定富文本在 `maxWidth` 内排版时所占用的尺寸。
+/// `textContainerInset` / `lineFragmentPadding` 应与目标 UITextView 保持一致，
+/// 这样结果才能与实际显示匹配（UITextView 默认：内边距 {8,8,8,8}，行间距 5）。
 + (CGSize)sizeForAttributedText:(nullable NSAttributedString *)attributedText
                        maxWidth:(CGFloat)maxWidth
              textContainerInset:(UIEdgeInsets)textContainerInset
             lineFragmentPadding:(CGFloat)lineFragmentPadding;
 
-/// Pre-calculate the size for plain text with the given attributes within `maxWidth`.
+/// 使用给定属性预计算纯文本在 `maxWidth` 内所占用的尺寸。
 + (CGSize)sizeForText:(nullable NSString *)text
            attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes
              maxWidth:(CGFloat)maxWidth
