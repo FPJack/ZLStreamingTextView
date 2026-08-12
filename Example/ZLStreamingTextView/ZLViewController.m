@@ -367,10 +367,16 @@
     CGFloat padding = 5.0;
 
     // 1) Pre-calculate the size BEFORE creating / displaying the view.
-    CGSize size = [ZLStreamingTextView sizeForAttributedText:attributed
-                                                    maxWidth:maxWidth
-                                          textContainerInset:inset
-                                         lineFragmentPadding:padding];
+    CGSize size = CGSizeZero;
+    {
+        ZLStreamingTextView *textView = [[ZLStreamingTextView alloc] initWithTextView:nil];
+        textView.maxTextWidth = maxWidth;
+        textView.textView.attributedText = attributed;
+        textView.textView.textContainerInset = inset;
+        textView.textView.textContainer.lineFragmentPadding = padding;
+        size = [textView textContentSize];
+        NSLog(@"Pre-calculated size for '%@': %.0f × %.0f", title, size.width, size.height);
+    }
 
     UIView *card = [[UIView alloc] init];
     card.translatesAutoresizingMaskIntoConstraints = NO;

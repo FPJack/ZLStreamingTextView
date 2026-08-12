@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 使用外部传入的自定义 UITextView 进行初始化（便于复用已配置好字体 / 颜色 / 内边距等的实例）。
 /// 传入的 textView 会被强制设为不可编辑（`editable = NO`），其余配置保持不变。
-- (instancetype)initWithTextView:(UITextView *)textView;
+- (instancetype)initWithTextView:(nullable UITextView  * )textView;
 
 /// 使用指定 frame 与外部传入的自定义 UITextView 进行初始化。
 - (instancetype)initWithFrame:(CGRect)frame
@@ -96,6 +96,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 流式过程中，当渲染文字的内容尺寸（宽 / 高）变化时回调。
 @property (nonatomic, copy, nullable) void (^onContentSizeChange)(CGSize contentSize);
 
+/// 预计算当前已显示文字在当前宽度下所占用的尺寸。
+- (CGSize)textContentSize;
 #pragma mark - 纯文本
 
 /// 重置缓冲区，并使用 `defaultTextAttributes` 开始流式显示给定的纯文本。
@@ -144,29 +146,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 清空所有内容（缓冲区 + 已显示文字）并停止。
 - (void)reset;
 
-#pragma mark - 尺寸预计算
-
-/// 预计算给定文字在【本视图】中所占用的尺寸，会沿用本视图 `textView` 的内边距 /
-/// 行间距以及 `maxTextWidth`（未设置时回退到当前 bounds 宽度）。
-- (CGSize)sizeThatFitsText:(nullable NSString *)text;
-
-/// 预计算给定富文本在【本视图】中所占用的尺寸。
-- (CGSize)sizeThatFitsAttributedText:(nullable NSAttributedString *)attributedText;
-
-/// 预计算给定富文本在 `maxWidth` 内排版时所占用的尺寸。
-/// `textContainerInset` / `lineFragmentPadding` 应与目标 UITextView 保持一致，
-/// 这样结果才能与实际显示匹配（UITextView 默认：内边距 {8,8,8,8}，行间距 5）。
-+ (CGSize)sizeForAttributedText:(nullable NSAttributedString *)attributedText
-                       maxWidth:(CGFloat)maxWidth
-             textContainerInset:(UIEdgeInsets)textContainerInset
-            lineFragmentPadding:(CGFloat)lineFragmentPadding;
-
-/// 使用给定属性预计算纯文本在 `maxWidth` 内所占用的尺寸。
-+ (CGSize)sizeForText:(nullable NSString *)text
-           attributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attributes
-             maxWidth:(CGFloat)maxWidth
-   textContainerInset:(UIEdgeInsets)textContainerInset
-  lineFragmentPadding:(CGFloat)lineFragmentPadding;
 
 @end
 

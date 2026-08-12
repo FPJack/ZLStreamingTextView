@@ -322,9 +322,21 @@
         width = CGRectGetWidth(self.bounds);
     }
     if (width <= 0) {
-        return CGSizeZero;
+        width = CGFLOAT_MAX;
     }
-    CGSize fitting = [self.textView sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)];
+    
+    CGFloat height = self.maxTextHeight > 0 ? self.maxTextHeight : CGRectGetHeight(self.textView.bounds);
+    
+    if (height <= 0) {
+        height = CGRectGetHeight(self.bounds);;
+    }
+    if (height <= 0) {
+        height = CGFLOAT_MAX;
+    }
+    
+    
+    
+    CGSize fitting = [self.textView sizeThatFits:CGSizeMake(width, height)];
     CGFloat w = ceil(fitting.width);
     CGFloat h = ceil(fitting.height);
     if (self.maxTextWidth > 0) {
@@ -359,76 +371,8 @@
 - (void)invalidateContentSize {
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 - (CGSize)intrinsicContentSize {
     return self.lastContentSize;
 }
-
-#pragma mark - 尺寸预计算
-
-/// 用于离屏测量的共享、可复用文本视图（必须在主线程使用）。
-+ (UITextView *)sharedSizingTextView {
-    static UITextView *sizingTextView = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sizingTextView = [[UITextView alloc] initWithFrame:CGRectZero];
-    });
-    return sizingTextView;
-}
-
-- (CGSize)sizeThatFitsAttributedText:(NSAttributedString *)attributedText {
-    CGFloat width = self.maxTextWidth > 0 ? self.maxTextWidth : CGRectGetWidth(self.bounds);
-    CGSize size = [ZLStreamingTextView sizeForAttributedText:attributedText
-                                                    maxWidth:width
-                                          textContainerInset:self.textView.textContainerInset
-                                         lineFragmentPadding:self.textView.textContainer.lineFragmentPadding];
-    if (self.maxTextWidth > 0) { size.width = MIN(size.width, self.maxTextWidth); }
-    if (self.maxTextHeight > 0) { size.height = MIN(size.height, self.maxTextHeight); }
-    if (self.minTextWidth > 0) { size.width = MAX(size.width, self.minTextWidth); }
-    if (self.minTextHeight > 0) { size.height = MAX(size.height, self.minTextHeight); }
-    return size;
-}
-
-- (CGSize)sizeThatFitsText:(NSString *)text {
-    NSAttributedString *attributed = [[NSAttributedString alloc] initWithString:(text ?: @"")
-                                                                     attributes:self.defaultTextAttributes];
-    return [self sizeThatFitsAttributedText:attributed];
-}
-
-+ (CGSize)sizeForText:(NSString *)text
-           attributes:(NSDictionary<NSAttributedStringKey, id> *)attributes
-             maxWidth:(CGFloat)maxWidth
-   textContainerInset:(UIEdgeInsets)textContainerInset
-  lineFragmentPadding:(CGFloat)lineFragmentPadding {
-    if (text.length == 0) { return CGSizeZero; }
-    NSDictionary *attrs = attributes ?: @{ NSFontAttributeName: [UIFont systemFontOfSize:16.0] };
-    NSAttributedString *attributed = [[NSAttributedString alloc] initWithString:text attributes:attrs];
-    return [self sizeForAttributedText:attributed
-                              maxWidth:maxWidth
-                    textContainerInset:textContainerInset
-                   lineFragmentPadding:lineFragmentPadding];
-}
-
-+ (CGSize)sizeForAttributedText:(NSAttributedString *)attributedText
-                       maxWidth:(CGFloat)maxWidth
-             textContainerInset:(UIEdgeInsets)textContainerInset
-            lineFragmentPadding:(CGFloat)lineFragmentPadding {
-    if (attributedText.length == 0 || maxWidth <= 0) { return CGSizeZero; }
-
-    // 使用共享、可复用的 UITextView 进行测量，使结果与实际渲染完全一致
-    //（裸用 NSLayoutManager / usedRectForTextContainer 对混排字体的行高计算略有差异，
-    //  会导致几点高度偏差）。
-    UITextView *sizingTextView = [self sharedSizingTextView];
-    sizingTextView.textContainerInset = textContainerInset;
-    sizingTextView.textContainer.lineFragmentPadding = lineFragmentPadding;
-    sizingTextView.attributedText = attributedText;
-
-    CGSize fitting = [sizingTextView sizeThatFits:CGSizeMake(maxWidth, CGFLOAT_MAX)];
-
-    // 释放引用，避免（可能很大的）富文本被长期持有。
-    sizingTextView.attributedText = nil;
-    return CGSizeMake(ceil(fitting.width), ceil(fitting.height));
-}
-
 @end
