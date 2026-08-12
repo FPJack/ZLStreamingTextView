@@ -46,9 +46,18 @@ NS_ASSUME_NONNULL_BEGIN
 /// Setting a fixed value gives a stable content-size measurement independent of the view's bounds.
 @property (nonatomic, assign) CGFloat maxTextWidth;
 
+
 /// Maximum height. The reported content-size height is clamped to this value (the text view scrolls
 /// beyond it). `0` means unlimited. Default `0`.
 @property (nonatomic, assign) CGFloat maxTextHeight;
+
+/// Minimum width. The reported content-size width is never smaller than this value. `0` means no
+/// minimum. Default `0`.
+@property (nonatomic, assign) CGFloat minTextWidth;
+
+/// Minimum height. The reported content-size height is never smaller than this value. `0` means no
+/// minimum. Default `0`.
+@property (nonatomic, assign) CGFloat minTextHeight;
 
 /// Whether the underlying text view can scroll while (and after) printing. Default `YES`.
 @property (nonatomic, assign, getter=isScrollEnabled) BOOL scrollEnabled;

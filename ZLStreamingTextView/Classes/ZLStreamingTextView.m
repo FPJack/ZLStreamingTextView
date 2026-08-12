@@ -81,6 +81,18 @@
     [self notifyContentSizeChangeIfNeeded];
 }
 
+- (void)setMinTextWidth:(CGFloat)minTextWidth {
+    if (_minTextWidth == minTextWidth) { return; }
+    _minTextWidth = minTextWidth;
+    [self notifyContentSizeChangeIfNeeded];
+}
+
+- (void)setMinTextHeight:(CGFloat)minTextHeight {
+    if (_minTextHeight == minTextHeight) { return; }
+    _minTextHeight = minTextHeight;
+    [self notifyContentSizeChangeIfNeeded];
+}
+
 - (void)setScrollEnabled:(BOOL)scrollEnabled {
     self.textView.scrollEnabled = scrollEnabled;
 }
@@ -284,6 +296,12 @@
     if (self.maxTextHeight > 0) {
         h = MIN(h, self.maxTextHeight);
     }
+    if (self.minTextWidth > 0) {
+        w = MAX(w, self.minTextWidth);
+    }
+    if (self.minTextHeight > 0) {
+        h = MAX(h, self.minTextHeight);
+    }
     return CGSizeMake(w, h);
 }
 
@@ -293,13 +311,21 @@
         return;
     }
     self.lastContentSize = size;
-
+    [self invalidateContentSize];
     if ([self.delegate respondsToSelector:@selector(streamingTextView:didChangeContentSize:)]) {
         [self.delegate streamingTextView:self didChangeContentSize:size];
     }
     if (self.onContentSizeChange) {
         self.onContentSizeChange(size);
     }
+}
+- (void)invalidateContentSize {
+    [self invalidateIntrinsicContentSize];
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+}
+- (CGSize)intrinsicContentSize {
+    return self.lastContentSize;
 }
 
 #pragma mark - Size pre-calculation
@@ -322,6 +348,8 @@
                                          lineFragmentPadding:self.textView.textContainer.lineFragmentPadding];
     if (self.maxTextWidth > 0) { size.width = MIN(size.width, self.maxTextWidth); }
     if (self.maxTextHeight > 0) { size.height = MIN(size.height, self.maxTextHeight); }
+    if (self.minTextWidth > 0) { size.width = MAX(size.width, self.minTextWidth); }
+    if (self.minTextHeight > 0) { size.height = MAX(size.height, self.minTextHeight); }
     return size;
 }
 

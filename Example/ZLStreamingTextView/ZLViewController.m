@@ -48,6 +48,8 @@
     CGFloat maxW = MIN([UIScreen mainScreen].bounds.size.width - 32.0, 320.0);
     self.streamingView.maxTextWidth = [UIScreen mainScreen].bounds.size.width - 32.0;
     self.streamingView.maxTextHeight = 320.0;
+    self.streamingView.minTextWidth = 100;
+    self.streamingView.minTextHeight = 34;
     [self.view addSubview:self.streamingView];
 
     self.statusLabel = [[UILabel alloc] init];
@@ -64,10 +66,10 @@
     };
 
     // Width / height constraints are updated live from the content-size callback.
-    self.streamingWidthConstraint = [self.streamingView.widthAnchor constraintEqualToConstant:maxW];
-    self.streamingHeightConstraint = [self.streamingView.heightAnchor constraintEqualToConstant:44];
-    self.streamingWidthConstraint.active = YES;
-    self.streamingHeightConstraint.active = YES;
+//    self.streamingWidthConstraint = [self.streamingView.widthAnchor constraintEqualToConstant:maxW];
+//    self.streamingHeightConstraint = [self.streamingView.heightAnchor constraintEqualToConstant:44];
+//    self.streamingWidthConstraint.active = YES;
+//    self.streamingHeightConstraint.active = YES;
 
     if (@available(iOS 11.0, *)) {
         UILayoutGuide *safe = self.view.safeAreaLayoutGuide;
@@ -257,12 +259,12 @@
     self.streamingHeightConstraint.constant = contentSize.height;
     NSLog(@"Content size changed: %.0f x %.0f", width, height);
 
-    [UIView animateWithDuration:0.15
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseOut
-                     animations:^{
-        [self.view layoutIfNeeded];
-    } completion:nil];
+//    [UIView animateWithDuration:0.15
+//                          delay:0
+//                        options:UIViewAnimationOptionCurveEaseOut
+//                     animations:^{
+//        [self.view layoutIfNeeded];
+//    } completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {
