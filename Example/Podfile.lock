@@ -5,17 +5,22 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
+  - SDWebImage (5.21.7):
+    - SDWebImage/Core (= 5.21.7)
+  - SDWebImage/Core (5.21.7)
   - ZLStreamingTextView (0.1.0)
 
 DEPENDENCIES:
   - Down
   - FBSnapshotTestCase
+  - SDWebImage
   - ZLStreamingTextView (from `../`)
 
 SPEC REPOS:
   trunk:
     - Down
     - FBSnapshotTestCase
+    - SDWebImage
 
 EXTERNAL SOURCES:
   ZLStreamingTextView:
@@ -24,8 +29,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Down: b6ba1bc985c9d2f4e15e3b293d2207766fa12612
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  ZLStreamingTextView: acb6c6047ea75e3706c45d23763c651ec8eb694d
+  SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
+  ZLStreamingTextView: c625d566307ff72e47c92ecacb459a0d467e17b4
 
-PODFILE CHECKSUM: 3863acf45cd8acfa420864bfe46f9900473e9983
+PODFILE CHECKSUM: d3782e902d75bc0db6ed78b5135d26a71f8cfec8
 
 COCOAPODS: 1.16.2

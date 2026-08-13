@@ -5,6 +5,7 @@ platform :ios, '10.0'
 target 'ZLStreamingTextView_Example' do
   pod 'ZLStreamingTextView', :path => '../'
   pod 'Down'
+  pod 'SDWebImage'
 #  pod 'CocoaMarkdown'
   target 'ZLStreamingTextView_Tests' do
     inherit! :search_paths
