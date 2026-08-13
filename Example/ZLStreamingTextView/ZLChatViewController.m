@@ -148,7 +148,9 @@
 
 /// Read the Markdown from the bundled READMETest.md resource.
 - (NSString *)readmeMarkdown {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"READMETest" ofType:@"md"];
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"READMETest" ofType:@"md"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Test" ofType:@"md"];
+
     NSString *content = path ? [NSString stringWithContentsOfFile:path
                                                          encoding:NSUTF8StringEncoding
                                                             error:NULL] : nil;
@@ -168,8 +170,31 @@
     NSAttributedString *rich = [ZLDownBridge attributedStringFromMarkdown:markdown
                                                                  fontSize:16.0
                                                                 textColor:[UIColor colorWithWhite:0.15 alpha:1.0]];
-    NSAttributedStringMarkdownParsingOptions *options =
-    [[NSAttributedStringMarkdownParsingOptions alloc] init];
+    
+
+    [rich enumerateAttribute:NSAttachmentAttributeName
+                                inRange:NSMakeRange(0, rich.length)
+                                options:NSAttributedStringEnumerationReverse
+                             usingBlock:^(id value,
+                                          NSRange range,
+                                          BOOL *stop) {
+
+        NSTextAttachment *attachment =
+            (NSTextAttachment *)value;
+        
+
+        if ([attachment isKindOfClass:[NSTextAttachment class]]) {
+
+            NSLog(@"attachment range = %@", NSStringFromRange(range));
+
+            NSLog(@"image = %@", attachment.image);
+
+        }
+
+    }];
+    
+//    NSAttributedStringMarkdownParsingOptions *options =
+//    [[NSAttributedStringMarkdownParsingOptions alloc] init];
 
 
 //    options.interpretedSyntax =

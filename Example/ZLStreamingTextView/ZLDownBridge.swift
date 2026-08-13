@@ -34,11 +34,7 @@ public class ZLDownBridge: NSObject {
         let configuration = DownStylerConfiguration(fonts: fonts, colors: colors)
 
         do {
-            // 先解析出 AST 根节点并递归打印，便于调试 Markdown 结构
-            let rootCMarkNode = try Down(markdownString: markdown).toAST(.hardBreaks)
-            if let rootNode = rootCMarkNode.wrap() {
-                printAST(rootNode)
-            }
+           
 
             return try Down(markdownString: markdown)
                 .toAttributedString(.default, styler: DownStyler(configuration: configuration))

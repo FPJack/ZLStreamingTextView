@@ -8,7 +8,6 @@ target 'ZLStreamingTextView_Example' do
 #  pod 'CocoaMarkdown'
   target 'ZLStreamingTextView_Tests' do
     inherit! :search_paths
-
     pod 'FBSnapshotTestCase'
   end
 end
