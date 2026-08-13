@@ -10,8 +10,30 @@ import Foundation
 import UIKit
 import Down
 
+/// 自定义 Styler：Down 默认会把 Markdown 图片 `![alt](url)` 渲染成「alt 文本 + link 属性」，
+/// 并不会生成 NSTextAttachment（alt 为空时甚至是空串）。这里改成插入一个占位的
+/// NSTextAttachment，并把图片 URL 存到自定义属性上，方便 Objective-C 侧下载并回填图片。
+public class ZLImageStyler: DownStyler {
+    /// 存放图片 URL 的自定义属性 key（Objective-C 可用同名字符串读取）。
+    public static let imageURLKey = NSAttributedString.Key("ZLImageURL")
+
+    public override func style(image str: NSMutableAttributedString, title: String?, url: String?) {
+        let attachment = NSTextAttachment()          // 占位附件，图片稍后由 App 侧下载填入
+        let placeholder = NSMutableAttributedString(attachment: attachment)
+        if let url = url {
+            let range = NSRange(location: 0, length: placeholder.length)
+            placeholder.addAttribute(ZLImageStyler.imageURLKey, value: url, range: range)
+        }
+        // 用附件替换掉原本的 alt 文本内容。
+        str.setAttributedString(placeholder)
+    }
+}
+
 @objcMembers
 public class ZLDownBridge: NSObject {
+
+    /// 供 Objective-C 读取图片 URL 的属性名。
+    public static let imageURLAttributeName = "ZLImageURL"
 
     /// Parse Markdown into an attributed string with a base font size and text color.
     public static func attributedString(fromMarkdown markdown: String,
@@ -34,10 +56,9 @@ public class ZLDownBridge: NSObject {
         let configuration = DownStylerConfiguration(fonts: fonts, colors: colors)
 
         do {
-           
-
+            // 使用自定义 styler，让图片变成真正的 NSTextAttachment（并携带 URL）。
             return try Down(markdownString: markdown)
-                .toAttributedString(.default, styler: DownStyler(configuration: configuration))
+                .toAttributedString(.normalize, styler: ZLImageStyler(configuration: configuration))
         } catch {
             print("Error converting markdown: \(error)")
             return nil

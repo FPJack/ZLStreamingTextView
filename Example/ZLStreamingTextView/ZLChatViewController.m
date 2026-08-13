@@ -164,59 +164,101 @@
     self.typingLabel.text = @"AI 正在输入…";
     [self.streamingView reset];
 
-    // Parse the whole README with Down into one rich-text string (keeps tables,
+    // Parse the whole Markdown with Down into one rich-text string (keeps tables,
     // code blocks and lists intact), then reveal it with the typewriter effect.
     NSString *markdown = [self readmeMarkdown];
-    NSAttributedString *rich = [ZLDownBridge attributedStringFromMarkdown:markdown
-                                                                 fontSize:16.0
-                                                                textColor:[UIColor colorWithWhite:0.15 alpha:1.0]];
-    
-
-    [rich enumerateAttribute:NSAttachmentAttributeName
-                                inRange:NSMakeRange(0, rich.length)
-                                options:NSAttributedStringEnumerationReverse
-                             usingBlock:^(id value,
-                                          NSRange range,
-                                          BOOL *stop) {
-
-        NSTextAttachment *attachment =
-            (NSTextAttachment *)value;
-        
-
-        if ([attachment isKindOfClass:[NSTextAttachment class]]) {
-
-            NSLog(@"attachment range = %@", NSStringFromRange(range));
-
-            NSLog(@"image = %@", attachment.image);
-
-        }
-
-    }];
-    
-//    NSAttributedStringMarkdownParsingOptions *options =
-//    [[NSAttributedStringMarkdownParsingOptions alloc] init];
-
-
-//    options.interpretedSyntax =
-//    NSAttributedStringMarkdownInterpretedSyntaxInlineOnly;
-//    rich =     [[NSAttributedString alloc] initWithMarkdownString:markdown options:options baseURL:nil error:nil];
-
-    if (rich.length == 0) {
+    NSAttributedString *parsed = [ZLDownBridge attributedStringFromMarkdown:markdown
+                                                                   fontSize:16.0
+                                                                  textColor:[UIColor colorWithWhite:0.15 alpha:1.0]];
+    if (parsed.length == 0) {
         self.typingLabel.text = @"解析失败";
         self.isResponding = NO;
         self.navigationItem.rightBarButtonItem.enabled = YES;
         return;
     }
 
-    // A slightly faster reveal since the README is long.
-    self.streamingView.charactersPerFrame = 1;
-    self.streamingView.frameInterval = 2;
+    NSMutableAttributedString *rich = [parsed mutableCopy];
 
-    // Simulate a short "thinking" delay before the stream begins.
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)),
-                   dispatch_get_main_queue(), ^{
+    // Down 默认把 Markdown 图片渲染成「alt 文本 + link 属性」，不会生成 NSTextAttachment；
+    // 我们在 Swift 侧的自定义 styler 里把图片改成了带 URL 的占位 NSTextAttachment。
+    // 这里找出所有图片附件，读取其上的 ZLImageURL 属性，异步下载后回填图片，再开始流式打印。
+    NSString *imageURLKey = ZLDownBridge.imageURLAttributeName;
+    NSMutableArray<NSValue *> *attachmentRanges = [NSMutableArray array];
+    NSMutableArray<NSString *> *attachmentURLs = [NSMutableArray array];
+    [rich enumerateAttribute:NSAttachmentAttributeName
+                     inRange:NSMakeRange(0, rich.length)
+                     options:0
+                  usingBlock:^(id value, NSRange range, BOOL *stop) {
+        if (![value isKindOfClass:[NSTextAttachment class]]) { return; }
+        NSString *urlStr = [rich attribute:imageURLKey atIndex:range.location effectiveRange:NULL];
+        if (urlStr.length == 0) { return; }
+        [attachmentRanges addObject:[NSValue valueWithRange:range]];
+        [attachmentURLs addObject:urlStr];
+    }];
+
+    CGFloat maxImageWidth = MIN([UIScreen mainScreen].bounds.size.width - 32.0, 300.0) - 24.0;
+    NSInteger pairCount = attachmentRanges.count;
+
+    if (pairCount > 0) {
+        self.typingLabel.text = @"正在加载图片…";
+    }
+
+    dispatch_group_t group = dispatch_group_create();
+    for (NSInteger i = 0; i < pairCount; i++) {
+        NSURL *url = [NSURL URLWithString:attachmentURLs[i]];
+        if (!url) { continue; }
+        NSRange range = [attachmentRanges[i] rangeValue];
+
+        dispatch_group_enter(group);
+        NSURLSessionDataTask *task =
+            [[NSURLSession sharedSession] dataTaskWithURL:url
+                                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            UIImage *image = data.length > 0 ? [UIImage imageWithData:data] : nil;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (image && NSMaxRange(range) <= rich.length) {
+                    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+                    attachment.image = image;
+                    // 按气泡宽度等比缩放。
+                    CGFloat w = MIN(image.size.width, maxImageWidth);
+                    CGFloat h = image.size.width > 0 ? image.size.height * (w / image.size.width) : image.size.height;
+                    attachment.bounds = CGRectMake(0, 0, floor(w), floor(h));
+                    [rich addAttribute:NSAttachmentAttributeName value:attachment range:range];
+                }
+                dispatch_group_leave(group);
+            });
+        }];
+        [task resume];
+    }
+
+    // 图片全部下载完成（或无图片）后开始逐帧流式打印。
+    __weak typeof(self) weakSelf = self;
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        __strong typeof(weakSelf) self = weakSelf;
+        if (!self) { return; }
+        self.typingLabel.text = @"AI 正在输入…";
+        self.streamingView.charactersPerFrame = 1;
+        self.streamingView.frameInterval = 2;
         [self.streamingView startStreamingAttributedText:rich];
     });
+}
+
+/// 用正则从 Markdown 中按出现顺序提取图片 URL：匹配 `![alt](url)`。
+- (NSArray<NSString *> *)imageURLStringsInMarkdown:(NSString *)markdown {
+    if (markdown.length == 0) { return @[]; }
+    NSMutableArray<NSString *> *urls = [NSMutableArray array];
+    NSRegularExpression *re =
+        [NSRegularExpression regularExpressionWithPattern:@"!\\[[^\\]]*\\]\\(\\s*<?([^)>\\s]+)"
+                                                  options:0
+                                                    error:NULL];
+    [re enumerateMatchesInString:markdown
+                         options:0
+                           range:NSMakeRange(0, markdown.length)
+                      usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
+        if (match.numberOfRanges > 1) {
+            [urls addObject:[markdown substringWithRange:[match rangeAtIndex:1]]];
+        }
+    }];
+    return urls;
 }
 
 #pragma mark - ZLStreamingTextViewDelegate

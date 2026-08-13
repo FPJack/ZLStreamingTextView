@@ -138,7 +138,7 @@ static CGFloat const kCellVInset = 10.0;   // 气泡与 cell 上下间距
     return list;
 }
 - (NSString *)readmeMarkdown {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"READMETest" ofType:@"md"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Test" ofType:@"md"];
     NSString *content = path ? [NSString stringWithContentsOfFile:path
                                                          encoding:NSUTF8StringEncoding
                                                             error:NULL] : nil;
