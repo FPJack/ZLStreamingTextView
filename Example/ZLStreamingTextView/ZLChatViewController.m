@@ -168,6 +168,14 @@
     NSAttributedString *rich = [ZLDownBridge attributedStringFromMarkdown:markdown
                                                                  fontSize:16.0
                                                                 textColor:[UIColor colorWithWhite:0.15 alpha:1.0]];
+    NSAttributedStringMarkdownParsingOptions *options =
+    [[NSAttributedStringMarkdownParsingOptions alloc] init];
+
+
+//    options.interpretedSyntax =
+//    NSAttributedStringMarkdownInterpretedSyntaxInlineOnly;
+//    rich =     [[NSAttributedString alloc] initWithMarkdownString:markdown options:options baseURL:nil error:nil];
+
     if (rich.length == 0) {
         self.typingLabel.text = @"解析失败";
         self.isResponding = NO;

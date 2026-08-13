@@ -71,7 +71,7 @@
 		983A77CEEC13EEC9702D0728 /* Pods_ZLStreamingTextView_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZLStreamingTextView_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A873F310E7646AE841C73E6C /* ZLChatViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ZLChatViewController.m; sourceTree = "<group>"; };
 		D967F68AD1E27AC0EA115E1E /* Pods-ZLStreamingTextView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZLStreamingTextView_Example.release.xcconfig"; path = "Target Support Files/Pods-ZLStreamingTextView_Example/Pods-ZLStreamingTextView_Example.release.xcconfig"; sourceTree = "<group>"; };
-		DC32FF0B5E925638FEFAA37D /* ZLStreamingTextView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ZLStreamingTextView.podspec; path = ../ZLStreamingTextView.podspec; sourceTree = "<group>"; };
+		DC32FF0B5E925638FEFAA37D /* ZLStreamingTextView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ZLStreamingTextView.podspec; path = ../ZLStreamingTextView.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		EB264A3CE7DCF903307E5D6F /* Pods-ZLStreamingTextView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZLStreamingTextView_Tests.debug.xcconfig"; path = "Target Support Files/Pods-ZLStreamingTextView_Tests/Pods-ZLStreamingTextView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		FA73EBB074F2A450812DFCD4 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -274,6 +274,8 @@
 				Base,
 			);
 			mainGroup = 6003F581195388D10070C39A;
+			packageReferences = (
+			);
 			productRefGroup = 6003F58B195388D20070C39A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";

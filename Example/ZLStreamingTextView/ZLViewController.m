@@ -170,6 +170,13 @@
                                  NSForegroundColorAttributeName: [UIColor whiteColor],
                                  NSBackgroundColorAttributeName: [UIColor magentaColor] };
     [rich appendAttributedString:[[NSAttributedString alloc] initWithString:@"这里是高亮" attributes:highlight]];
+    
+    UIImage *image = [UIImage imageNamed:@"image"];
+    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+    attachment.image = image;
+    attachment.bounds = CGRectMake(0, -4, 28, 66);
+    NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:attachment];
+    [rich appendAttributedString:imageString];
 
     NSDictionary *underline = @{ NSFontAttributeName: [UIFont italicSystemFontOfSize:17],
                                  NSForegroundColorAttributeName: [UIColor greenColor],
@@ -257,7 +264,6 @@
     CGFloat height = MAX(contentSize.height, 44.0);
     self.streamingWidthConstraint.constant = contentSize.width;
     self.streamingHeightConstraint.constant = contentSize.height;
-    NSLog(@"Content size changed: %.0f x %.0f", width, height);
 
 //    [UIView animateWithDuration:0.15
 //                          delay:0
@@ -329,6 +335,8 @@
     [stack addArrangedSubview:[self cardWithTitle:@"富文本（混排）"
                                        attributed:[self richAttributed]
                                          maxWidth:maxWidth]];
+    
+    
 }
 
 - (void)close {

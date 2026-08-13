@@ -1,6 +1,4 @@
 ## Down
-
-<br>kdkdkd<br/>
 [![Build Status](https://travis-ci.com/johnxnguyen/Down.svg?branch=master)](https://travis-ci.com/johnxnguyen/Down)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/johnxnguyen/Down/blob/master/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Down)](https://cocoapods.org/pods/Down)
