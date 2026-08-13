@@ -27,6 +27,7 @@
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		986B894864018552A004C91F /* Pods_ZLStreamingTextView_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 454C3893C8C686F3945F02BD /* Pods_ZLStreamingTextView_Example.framework */; };
 		AF8B50168542DE44649B1E64 /* ZLDownBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C025770CD52AFD14066340 /* ZLDownBridge.swift */; };
+		D7909FFEA50DDA484EB95BCC /* ZLTableStreamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F92CEE048831B0D63AC09D /* ZLTableStreamViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		2B8A1A3A0EC72D99013C9C6B /* ZLChatViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ZLChatViewController.h; sourceTree = "<group>"; };
 		454C3893C8C686F3945F02BD /* Pods_ZLStreamingTextView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZLStreamingTextView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46E728222870C8D891EDC341 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		53F92CEE048831B0D63AC09D /* ZLTableStreamViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ZLTableStreamViewController.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* ZLStreamingTextView_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZLStreamingTextView_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -72,6 +74,7 @@
 		A873F310E7646AE841C73E6C /* ZLChatViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ZLChatViewController.m; sourceTree = "<group>"; };
 		D967F68AD1E27AC0EA115E1E /* Pods-ZLStreamingTextView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZLStreamingTextView_Example.release.xcconfig"; path = "Target Support Files/Pods-ZLStreamingTextView_Example/Pods-ZLStreamingTextView_Example.release.xcconfig"; sourceTree = "<group>"; };
 		DC32FF0B5E925638FEFAA37D /* ZLStreamingTextView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ZLStreamingTextView.podspec; path = ../ZLStreamingTextView.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		DF16279D688642E026A928BA /* ZLTableStreamViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ZLTableStreamViewController.h; sourceTree = "<group>"; };
 		EB264A3CE7DCF903307E5D6F /* Pods-ZLStreamingTextView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZLStreamingTextView_Tests.debug.xcconfig"; path = "Target Support Files/Pods-ZLStreamingTextView_Tests/Pods-ZLStreamingTextView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		FA73EBB074F2A450812DFCD4 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -151,6 +154,8 @@
 				84A2E7D2302B2AF700580039 /* READMETest.md */,
 				A873F310E7646AE841C73E6C /* ZLChatViewController.m */,
 				19C025770CD52AFD14066340 /* ZLDownBridge.swift */,
+				DF16279D688642E026A928BA /* ZLTableStreamViewController.h */,
+				53F92CEE048831B0D63AC09D /* ZLTableStreamViewController.m */,
 			);
 			name = "Example for ZLStreamingTextView";
 			path = ZLStreamingTextView;
@@ -274,8 +279,6 @@
 				Base,
 			);
 			mainGroup = 6003F581195388D10070C39A;
-			packageReferences = (
-			);
 			productRefGroup = 6003F58B195388D20070C39A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -404,6 +407,7 @@
 				6003F59A195388D20070C39A /* main.m in Sources */,
 				1FCFD5245E0882366EDBFF14 /* ZLChatViewController.m in Sources */,
 				AF8B50168542DE44649B1E64 /* ZLDownBridge.swift in Sources */,
+				D7909FFEA50DDA484EB95BCC /* ZLTableStreamViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

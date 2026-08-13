@@ -9,6 +9,7 @@
 #import "ZLViewController.h"
 #import <ZLStreamingTextView/ZLStreamingTextView.h>
 #import "ZLChatViewController.h"
+#import "ZLTableStreamViewController.h"
 
 /// Demo screen that pre-calculates text/rich-text sizes before displaying them.
 @interface ZLSizeCalcViewController : UIViewController
@@ -100,6 +101,7 @@
     UIButton *chatButton  = [self buttonWithTitle:@"AI Chat (Down Markdown)" action:@selector(onOpenChat)];
     UIButton *sizeButton  = [self buttonWithTitle:@"Pre-calc Size" action:@selector(onOpenSizeCalc)];
     UIButton *offsetButton= [self buttonWithTitle:@"Start From Offset" action:@selector(onStartFromOffset)];
+    UIButton *tableButton = [self buttonWithTitle:@"TableView Streaming" action:@selector(onOpenTableStream)];
 
     UIStackView *row1 = [[UIStackView alloc] initWithArrangedSubviews:@[plainButton, richButton, streamButton]];
     row1.axis = UILayoutConstraintAxisHorizontal;
@@ -111,7 +113,7 @@
     row2.distribution = UIStackViewDistributionFillEqually;
     row2.spacing = 12;
 
-    UIStackView *stack = [[UIStackView alloc] initWithArrangedSubviews:@[row1, row2, chatButton, sizeButton, offsetButton]];
+    UIStackView *stack = [[UIStackView alloc] initWithArrangedSubviews:@[row1, row2, chatButton, sizeButton, offsetButton, tableButton]];
     stack.axis = UILayoutConstraintAxisVertical;
     stack.spacing = 12;
     stack.translatesAutoresizingMaskIntoConstraints = NO;
@@ -226,6 +228,17 @@
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)onOpenTableStream {
+    ZLTableStreamViewController *vc = [[ZLTableStreamViewController alloc] init];
+    if (self.navigationController) {
+        [self.navigationController pushViewController:vc animated:YES];
+    } else {
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+        nav.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self presentViewController:nav animated:YES completion:nil];
+    }
 }
 
 - (void)onStartFromOffset {

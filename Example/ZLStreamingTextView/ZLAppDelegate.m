@@ -7,12 +7,18 @@
 //
 
 #import "ZLAppDelegate.h"
+#import "ZLViewController.h"
 
 @implementation ZLAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    // 用导航控制器包裹根控制器，方便各页面使用 push 跳转。
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    ZLViewController *root = [[ZLViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:root];
+    self.window.rootViewController = nav;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 
