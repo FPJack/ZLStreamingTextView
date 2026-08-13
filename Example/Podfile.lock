@@ -1,0 +1,31 @@
+PODS:
+  - Down (0.11.0)
+  - FBSnapshotTestCase (2.1.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
+  - FBSnapshotTestCase/Core (2.1.4)
+  - FBSnapshotTestCase/SwiftSupport (2.1.4):
+    - FBSnapshotTestCase/Core
+  - ZLStreamingTextView (0.1.0)
+
+DEPENDENCIES:
+  - Down
+  - FBSnapshotTestCase
+  - ZLStreamingTextView (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - Down
+    - FBSnapshotTestCase
+
+EXTERNAL SOURCES:
+  ZLStreamingTextView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Down: b6ba1bc985c9d2f4e15e3b293d2207766fa12612
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  ZLStreamingTextView: acb6c6047ea75e3706c45d23763c651ec8eb694d
+
+PODFILE CHECKSUM: 3863acf45cd8acfa420864bfe46f9900473e9983
+
+COCOAPODS: 1.16.2
