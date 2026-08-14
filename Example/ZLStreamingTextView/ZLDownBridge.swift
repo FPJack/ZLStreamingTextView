@@ -128,19 +128,35 @@ public class ZLDownBridge: NSObject {
         colors.heading2 = textColor
         colors.heading3 = textColor
         // 代码文字颜色 + 代码块背景色（背景色由 codeBlockBackground 控制）。
-        colors.code = .white
-        colors.codeBlockBackground = .lightGray
+        colors.code = UIColor(red: 0.8, green: 0.1, blue: 0.1, alpha: 1.0) // 深红色
+        colors.codeBlockBackground = UIColor(red: 0.96, green: 0.97, blue: 0.98, alpha: 1) // 浅灰蓝色
+        
 
         // 代码块段落样式：行距、首行/整体缩进。
         var paragraphStyles = StaticParagraphStyleCollection()
         let codeParagraph = NSMutableParagraphStyle()
-        codeParagraph.lineSpacing = 2
+        codeParagraph.lineSpacing = 10
         codeParagraph.paragraphSpacingBefore = 6
+        
         codeParagraph.paragraphSpacing = 6
         codeParagraph.firstLineHeadIndent = 8
         codeParagraph.headIndent = 8
         codeParagraph.tailIndent = -8
         paragraphStyles.code = codeParagraph
+
+        // 标题段落样式：加大标题上下间距。
+        let makeHeadingStyle: (CGFloat, CGFloat) -> NSParagraphStyle = { before, after in
+            let style = NSMutableParagraphStyle()
+            style.paragraphSpacingBefore = before   // 标题前留白
+            style.paragraphSpacing = after          // 标题后留白
+            return style
+        }
+        paragraphStyles.heading1 = makeHeadingStyle(24, 12)
+        paragraphStyles.heading2 = makeHeadingStyle(20, 10)
+        paragraphStyles.heading3 = makeHeadingStyle(16, 8)
+        paragraphStyles.heading4 = makeHeadingStyle(14, 8)
+        paragraphStyles.heading5 = makeHeadingStyle(12, 6)
+        paragraphStyles.heading6 = makeHeadingStyle(12, 6)
 
         // 代码块背景容器的内边距。
         let codeBlockOptions = CodeBlockOptions(containerInset: 8)
