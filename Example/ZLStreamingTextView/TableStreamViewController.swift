@@ -230,7 +230,7 @@ class TableStreamViewController: UIViewController, UITableViewDataSource, UITabl
             tableView.endUpdates()
         }
         if autoScrollToBottom {
-            scrollToBottom(animated: false)
+            scrollToBottom(animated: true)
         }
     }
 
