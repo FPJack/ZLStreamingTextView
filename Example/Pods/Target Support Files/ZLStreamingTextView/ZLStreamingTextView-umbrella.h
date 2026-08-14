@@ -10,7 +10,6 @@
 #endif
 #endif
 
-#import "ZLStreamingTextView.h"
 
 FOUNDATION_EXPORT double ZLStreamingTextViewVersionNumber;
 FOUNDATION_EXPORT const unsigned char ZLStreamingTextViewVersionString[];

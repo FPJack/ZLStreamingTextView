@@ -8,14 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		02D6EC6846C28871705A765E /* Pods_ZLStreamingTextView_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 983A77CEEC13EEC9702D0728 /* Pods_ZLStreamingTextView_Tests.framework */; };
-		1FCFD5245E0882366EDBFF14 /* ZLChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A873F310E7646AE841C73E6C /* ZLChatViewController.m */; };
+		1751E517A9A8A78CAA6F695E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB7E870A0AA25ED81ED5AA /* ViewController.swift */; };
+		3E372E31FC5C59C85F737B50 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99B48EACB37205D02E18963 /* AppDelegate.swift */; };
+		3E8FD6F3868560AA812CBB71 /* TableStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACEFC2D3B4304AB12091CCD /* TableStreamViewController.swift */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F598195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
-		6003F59A195388D20070C39A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
-		6003F59E195388D20070C39A /* ZLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F59D195388D20070C39A /* ZLAppDelegate.m */; };
-		6003F5A7195388D20070C39A /* ZLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5A6195388D20070C39A /* ZLViewController.m */; };
 		6003F5A9195388D20070C39A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
 		6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -23,12 +22,12 @@
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
+		837E4AD815F90667DEB5A34E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B52F2DEF14DF5352DF2849 /* ChatViewController.swift */; };
 		84A2E7D3302B2AF700580039 /* READMETest.md in Resources */ = {isa = PBXBuildFile; fileRef = 84A2E7D2302B2AF700580039 /* READMETest.md */; };
 		84DC5713302DC33600A48AD7 /* Test.md in Resources */ = {isa = PBXBuildFile; fileRef = 84DC5712302DC33600A48AD7 /* Test.md */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		986B894864018552A004C91F /* Pods_ZLStreamingTextView_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 454C3893C8C686F3945F02BD /* Pods_ZLStreamingTextView_Example.framework */; };
 		AF8B50168542DE44649B1E64 /* ZLDownBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C025770CD52AFD14066340 /* ZLDownBridge.swift */; };
-		D7909FFEA50DDA484EB95BCC /* ZLTableStreamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F92CEE048831B0D63AC09D /* ZLTableStreamViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,22 +43,16 @@
 /* Begin PBXFileReference section */
 		07B0A526E01A5A4F961111A3 /* Pods-ZLStreamingTextView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZLStreamingTextView_Example.debug.xcconfig"; path = "Target Support Files/Pods-ZLStreamingTextView_Example/Pods-ZLStreamingTextView_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		19C025770CD52AFD14066340 /* ZLDownBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ZLDownBridge.swift; sourceTree = "<group>"; };
-		2B8A1A3A0EC72D99013C9C6B /* ZLChatViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ZLChatViewController.h; sourceTree = "<group>"; };
+		44EB7E870A0AA25ED81ED5AA /* ViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		454C3893C8C686F3945F02BD /* Pods_ZLStreamingTextView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZLStreamingTextView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46E728222870C8D891EDC341 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		53F92CEE048831B0D63AC09D /* ZLTableStreamViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ZLTableStreamViewController.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* ZLStreamingTextView_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZLStreamingTextView_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6003F591195388D20070C39A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6003F595195388D20070C39A /* ZLStreamingTextView-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ZLStreamingTextView-Info.plist"; sourceTree = "<group>"; };
 		6003F597195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6003F599195388D20070C39A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6003F59B195388D20070C39A /* ZLStreamingTextView-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ZLStreamingTextView-Prefix.pch"; sourceTree = "<group>"; };
-		6003F59C195388D20070C39A /* ZLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZLAppDelegate.h; sourceTree = "<group>"; };
-		6003F59D195388D20070C39A /* ZLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZLAppDelegate.m; sourceTree = "<group>"; };
-		6003F5A5195388D20070C39A /* ZLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZLViewController.h; sourceTree = "<group>"; };
-		6003F5A6195388D20070C39A /* ZLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZLViewController.m; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6003F5AE195388D20070C39A /* ZLStreamingTextView_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZLStreamingTextView_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -73,10 +66,11 @@
 		84DC5712302DC33600A48AD7 /* Test.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Test.md; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		983A77CEEC13EEC9702D0728 /* Pods_ZLStreamingTextView_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZLStreamingTextView_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A873F310E7646AE841C73E6C /* ZLChatViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ZLChatViewController.m; sourceTree = "<group>"; };
+		B99B48EACB37205D02E18963 /* AppDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BACEFC2D3B4304AB12091CCD /* TableStreamViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TableStreamViewController.swift; sourceTree = "<group>"; };
 		D967F68AD1E27AC0EA115E1E /* Pods-ZLStreamingTextView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZLStreamingTextView_Example.release.xcconfig"; path = "Target Support Files/Pods-ZLStreamingTextView_Example/Pods-ZLStreamingTextView_Example.release.xcconfig"; sourceTree = "<group>"; };
 		DC32FF0B5E925638FEFAA37D /* ZLStreamingTextView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ZLStreamingTextView.podspec; path = ../ZLStreamingTextView.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		DF16279D688642E026A928BA /* ZLTableStreamViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ZLTableStreamViewController.h; sourceTree = "<group>"; };
+		E6B52F2DEF14DF5352DF2849 /* ChatViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		EB264A3CE7DCF903307E5D6F /* Pods-ZLStreamingTextView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZLStreamingTextView_Tests.debug.xcconfig"; path = "Target Support Files/Pods-ZLStreamingTextView_Tests/Pods-ZLStreamingTextView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		FA73EBB074F2A450812DFCD4 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -144,21 +138,17 @@
 		6003F593195388D20070C39A /* Example for ZLStreamingTextView */ = {
 			isa = PBXGroup;
 			children = (
-				6003F59C195388D20070C39A /* ZLAppDelegate.h */,
-				6003F59D195388D20070C39A /* ZLAppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
-				6003F5A5195388D20070C39A /* ZLViewController.h */,
-				6003F5A6195388D20070C39A /* ZLViewController.m */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
-				2B8A1A3A0EC72D99013C9C6B /* ZLChatViewController.h */,
 				84A2E7D2302B2AF700580039 /* READMETest.md */,
 				84DC5712302DC33600A48AD7 /* Test.md */,
-				A873F310E7646AE841C73E6C /* ZLChatViewController.m */,
 				19C025770CD52AFD14066340 /* ZLDownBridge.swift */,
-				DF16279D688642E026A928BA /* ZLTableStreamViewController.h */,
-				53F92CEE048831B0D63AC09D /* ZLTableStreamViewController.m */,
+				B99B48EACB37205D02E18963 /* AppDelegate.swift */,
+				44EB7E870A0AA25ED81ED5AA /* ViewController.swift */,
+				E6B52F2DEF14DF5352DF2849 /* ChatViewController.swift */,
+				BACEFC2D3B4304AB12091CCD /* TableStreamViewController.swift */,
 			);
 			name = "Example for ZLStreamingTextView";
 			path = ZLStreamingTextView;
@@ -169,7 +159,6 @@
 			children = (
 				6003F595195388D20070C39A /* ZLStreamingTextView-Info.plist */,
 				6003F596195388D20070C39A /* InfoPlist.strings */,
-				6003F599195388D20070C39A /* main.m */,
 				6003F59B195388D20070C39A /* ZLStreamingTextView-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -412,12 +401,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6003F59E195388D20070C39A /* ZLAppDelegate.m in Sources */,
-				6003F5A7195388D20070C39A /* ZLViewController.m in Sources */,
-				6003F59A195388D20070C39A /* main.m in Sources */,
-				1FCFD5245E0882366EDBFF14 /* ZLChatViewController.m in Sources */,
 				AF8B50168542DE44649B1E64 /* ZLDownBridge.swift in Sources */,
-				D7909FFEA50DDA484EB95BCC /* ZLTableStreamViewController.m in Sources */,
+				3E372E31FC5C59C85F737B50 /* AppDelegate.swift in Sources */,
+				1751E517A9A8A78CAA6F695E /* ViewController.swift in Sources */,
+				837E4AD815F90667DEB5A34E /* ChatViewController.swift in Sources */,
+				3E8FD6F3868560AA812CBB71 /* TableStreamViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -558,6 +546,7 @@
 					"\"${PODS_ROOT}/Down/Sources/cmark/include\"",
 				);
 				INFOPLIST_FILE = "ZLStreamingTextView/ZLStreamingTextView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wws.thehe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -589,6 +578,7 @@
 					"\"${PODS_ROOT}/Down/Sources/cmark/include\"",
 				);
 				INFOPLIST_FILE = "ZLStreamingTextView/ZLStreamingTextView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wws.thehe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -619,6 +609,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -640,6 +631,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

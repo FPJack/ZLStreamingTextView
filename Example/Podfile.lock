@@ -30,7 +30,7 @@ SPEC CHECKSUMS:
   Down: b6ba1bc985c9d2f4e15e3b293d2207766fa12612
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
-  ZLStreamingTextView: c625d566307ff72e47c92ecacb459a0d467e17b4
+  ZLStreamingTextView: fd066dda69982126b3de2127e9e27aefc0bbaee1
 
 PODFILE CHECKSUM: d3782e902d75bc0db6ed78b5135d26a71f8cfec8
 
