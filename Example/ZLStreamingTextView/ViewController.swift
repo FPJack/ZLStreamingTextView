@@ -345,7 +345,8 @@ class SizeCalcViewController: UIViewController {
         display.layer.borderColor = UIColor(red: 0.0, green: 0.48, blue: 1.0, alpha: 1.0).cgColor
         display.layer.borderWidth = 1.0
         display.layer.cornerRadius = 6.0
-        display.charactersPerFrame = 2
+        display.charactersPerFrame = 1
+        display.frameInterval = 2
         display.maxTextWidth = size.width
         display.startStreamingAttributedText(attributed)
         card.addSubview(display)
