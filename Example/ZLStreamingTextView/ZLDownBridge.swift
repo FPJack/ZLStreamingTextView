@@ -92,6 +92,23 @@ public class ZLDownBridge: NSObject {
     /// 供 Objective-C 读取图片 URL 的属性名。
     public static let imageURLAttributeName = "ZLImageURL"
 
+    /// 创建一个使用 Down 的 `DownLayoutManager` 的 UITextView。
+    /// Down 的代码块背景 / 引用竖线 / 分隔线等是自定义 block 属性，
+    /// 只有 `DownLayoutManager` 才会绘制；普通 UITextView 的默认 layoutManager 不会画，
+    /// 所以要展示代码块背景色必须用它来承载文本。
+    public static func makeDownTextView() -> UITextView {
+        let textStorage = NSTextStorage()
+        let layoutManager = DownLayoutManager()
+        textStorage.addLayoutManager(layoutManager)
+
+        let textContainer = NSTextContainer()
+        layoutManager.addTextContainer(textContainer)
+
+        let textView = UITextView(frame: .zero, textContainer: textContainer)
+        textView.backgroundColor = .clear
+        return textView
+    }
+
     /// Parse Markdown into an attributed string with a base font size and text color.
     public static func attributedString(fromMarkdown markdown: String,
                                         fontSize: CGFloat,
@@ -101,6 +118,7 @@ public class ZLDownBridge: NSObject {
         fonts.heading1 = UIFont.boldSystemFont(ofSize: fontSize + 9)
         fonts.heading2 = UIFont.boldSystemFont(ofSize: fontSize + 6)
         fonts.heading3 = UIFont.boldSystemFont(ofSize: fontSize + 3)
+        // 行内代码 + 代码块的字体（等宽字体）。
         fonts.code = UIFont(name: "Menlo", size: fontSize - 1) ?? UIFont.systemFont(ofSize: fontSize - 1)
         
 
@@ -109,8 +127,28 @@ public class ZLDownBridge: NSObject {
         colors.heading1 = textColor
         colors.heading2 = textColor
         colors.heading3 = textColor
+        // 代码文字颜色 + 代码块背景色（背景色由 codeBlockBackground 控制）。
+        colors.code = .white
+        colors.codeBlockBackground = .lightGray
 
-        let configuration = DownStylerConfiguration(fonts: fonts, colors: colors)
+        // 代码块段落样式：行距、首行/整体缩进。
+        var paragraphStyles = StaticParagraphStyleCollection()
+        let codeParagraph = NSMutableParagraphStyle()
+        codeParagraph.lineSpacing = 2
+        codeParagraph.paragraphSpacingBefore = 6
+        codeParagraph.paragraphSpacing = 6
+        codeParagraph.firstLineHeadIndent = 8
+        codeParagraph.headIndent = 8
+        codeParagraph.tailIndent = -8
+        paragraphStyles.code = codeParagraph
+
+        // 代码块背景容器的内边距。
+        let codeBlockOptions = CodeBlockOptions(containerInset: 8)
+
+        let configuration = DownStylerConfiguration(fonts: fonts,
+                                                    colors: colors,
+                                                    paragraphStyles: paragraphStyles,
+                                                    codeBlockOptions: codeBlockOptions)
 
         do {
             // 使用自定义 styler，让图片变成真正的 NSTextAttachment（并携带 URL）。

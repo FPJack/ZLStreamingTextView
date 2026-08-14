@@ -1,3 +1,26 @@
+
+```swift
+public struct MarkdownToHTML: DownHTMLRenderable {
+    /**
+     A string containing CommonMark Markdown
+    */
+    public var markdownString: String
+
+    /**
+     Initializes the container with a CommonMark Markdown string which can then be rendered as HTML using `toHTML()`
+
+     - parameter markdownString: A string containing CommonMark Markdown
+
+     - returns: An instance of Self
+     */
+    @warn_unused_result
+    public init(markdownString: String) {
+        self.markdownString = markdownString
+    }
+}
+```
+
+
 # 一级标题
 ## 二级标题
 ### 三级标题
@@ -81,5 +104,6 @@ Appium supports app automation across a variety of platforms, like iOS, Android,
 - 高清显示
 - 超长续航
 - 轻薄设计
+
 
 
