@@ -7,7 +7,6 @@
 #import <ZLStreamingTextView/ZLStreamingTextView.h>
 // Generated header exposing the app-target Swift bridge (ZLDownBridge) to Objective-C.
 #import "ZLStreamingTextView_Example-Swift.h"
-#import <SDWebImage/SDWebImage.h>
 @interface ZLChatViewController () <ZLStreamingTextViewDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *contentView;
@@ -166,9 +165,10 @@
     self.typingLabel.text = @"AI 正在输入…";
     [self.streamingView reset];
 
-    // Parse the whole Markdown with Down into one rich-text string (keeps tables,
-    // code blocks and lists intact), then reveal it with the typewriter effect.
     NSString *markdown = [self readmeMarkdown];
+    CGFloat maxImageWidth = MIN([UIScreen mainScreen].bounds.size.width - 32.0, 300.0) - 24.0;
+
+    // 1) 解析 Markdown 得到未处理的富文本。
     NSAttributedString *parsed = [ZLDownBridge attributedStringFromMarkdown:markdown
                                                                    fontSize:16.0
                                                                   textColor:[UIColor colorWithWhite:0.15 alpha:1.0]];
@@ -179,84 +179,24 @@
         return;
     }
 
-    NSMutableAttributedString *rich = [parsed mutableCopy];
-
-    // Down 默认把 Markdown 图片渲染成「alt 文本 + link 属性」，不会生成 NSTextAttachment；
-    // 我们在 Swift 侧的自定义 styler 里把图片改成了带 URL 的占位 NSTextAttachment。
-    // 这里找出所有图片附件，读取其上的 ZLImageURL 属性。
-    NSString *imageURLKey = ZLDownBridge.imageURLAttributeName;
-    NSMutableArray<NSValue *> *attachmentRanges = [NSMutableArray array];
-    NSMutableArray<NSString *> *attachmentURLs = [NSMutableArray array];
-    NSMutableArray<NSTextAttachment *> *attachments = [NSMutableArray array];
-
-    CGFloat maxImageWidth = MIN([UIScreen mainScreen].bounds.size.width - 32.0, 300.0) - 24.0;
-
-    [rich enumerateAttribute:NSAttachmentAttributeName
-                     inRange:NSMakeRange(0, rich.length)
-                     options:0
-                  usingBlock:^(id value, NSRange range, BOOL *stop) {
-        if (![value isKindOfClass:[NSTextAttachment class]]) { return; }
-        NSString *urlStr = [rich attribute:imageURLKey atIndex:range.location effectiveRange:NULL];
-        if (urlStr.length == 0) { return; }
-
-        // 先给一个占位尺寸/图，保证排版有预留空间，图片下载完成后再替换。
-        NSTextAttachment *attachment = (NSTextAttachment *)value;
-        attachment.image = [self placeholderImageOfSize:CGSizeMake(maxImageWidth, 120.0)];
-        attachment.bounds = CGRectMake(0, 0, maxImageWidth, 120.0);
-
-        [attachmentRanges addObject:[NSValue valueWithRange:range]];
-        [attachmentURLs addObject:urlStr];
-        [attachments addObject:attachment];
-    }];
-
-    // 立即开始流式打印（不等待图片）。
+    // 2) 处理图片：替换为会自下载的附件，下载完成后回调刷新对应区域。
     self.streamGeneration += 1;
     NSInteger generation = self.streamGeneration;
-    self.typingLabel.text = attachments.count > 0 ? @"AI 正在输入…（图片加载中）" : @"AI 正在输入…";
+    __weak typeof(self) weakSelf = self;
+    NSAttributedString *rich =
+        [ZLDownBridge processImagesIn:parsed
+                        maxImageWidth:maxImageWidth
+                        onImageLoaded:^(NSRange range) {
+            __strong typeof(weakSelf) self = weakSelf;
+            if (!self || generation != self.streamGeneration) { return; }   // 丢弃旧一轮的回调
+            [self refreshImageAtRange:range];
+        }];
+
+    // 立即开始流式打印（图片在附件内部异步下载，完成后回调刷新）。
+    self.typingLabel.text = @"AI 正在输入…";
     self.streamingView.charactersPerFrame = 1;
     self.streamingView.frameInterval = 2;
     [self.streamingView startStreamingAttributedText:rich];
-
-    // 异步下载每张图片，完成后就地替换对应附件并刷新 UI。
-    __weak typeof(self) weakSelf = self;
-    for (NSInteger i = 0; i < (NSInteger)attachments.count; i++) {
-        NSURL *url = [NSURL URLWithString:attachmentURLs[i]];
-        if (!url) { continue; }
-        NSRange range = [attachmentRanges[i] rangeValue];
-        NSTextAttachment *attachment = attachments[i];
-
-        [[SDWebImageManager sharedManager] loadImageWithURL:url
-                                                    options:0
-                                                   progress:nil
-                                                  completed:^(UIImage *image, NSData *data,
-                                                              NSError *error, SDImageCacheType cacheType,
-                                                              BOOL finished, NSURL *imageURL) {
-            __strong typeof(weakSelf) self = weakSelf;
-            if (!self || !image) { return; }
-            if (generation != self.streamGeneration) { return; }   // 已经重新生成，丢弃旧回调
-
-            // 就地更新共享的附件对象（流式缓冲区与文本视图持有同一引用）。
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(40 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                attachment.image = image;
-                CGFloat w = MIN(image.size.width, maxImageWidth);
-                CGFloat h = image.size.width > 0 ? image.size.height * (w / image.size.width) : image.size.height;
-                attachment.bounds = CGRectMake(0, 0, floor(w), floor(h));
-                [self refreshImageAtRange:range];
-            });
-        }];
-    }
-}
-
-/// 生成一个纯色占位图，用于图片下载前预留空间。
-- (UIImage *)placeholderImageOfSize:(CGSize)size {
-    if (size.width <= 0 || size.height <= 0) { return nil; }
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
-    [[UIColor colorWithWhite:0.92 alpha:1.0] setFill];
-    UIRectFill(CGRectMake(0, 0, size.width, size.height));
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
 }
 
 /// 图片下载完成后刷新指定附件所在区域：若该区域已显示则强制重绘并更新气泡高度；
